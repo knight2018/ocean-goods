@@ -18,7 +18,7 @@ export default {
    */
   baseUrl: {
     dev: '',
-    pro: 'http://192.168.1.152:5100/'
+    pro: 'https://fish-test.zhonglehd.cn/appletAdmin'
   },
   /**
    * @description 默认打开的首页的路由name值，默认为home

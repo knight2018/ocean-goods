@@ -74,7 +74,7 @@ export default {
 		},
 		handleAdd () {
 			let shopAdd = JSON.parse(JSON.stringify(this.shopAdd))
-			shopAdd.productCategoryId =shopAdd.productCategoryId[1]||shopAdd.productCategoryId[0]  //shopAdd.productCategoryId.length===2?shopAdd.productCategoryId[1]:shopAdd.productCategoryId[0]
+			shopAdd.productCategoryId =shopAdd.productCategoryId[1] //shopAdd.productCategoryId.length===2?shopAdd.productCategoryId[1]:shopAdd.productCategoryId[0]
 			if (this.update) {
 				productUpdate(this.id, shopAdd).then((res) => {
 					this.$Message.success('修改商品成功')
@@ -94,16 +94,20 @@ export default {
 	},
 	mounted () {
 		if (this.$route.query.obj) {
-			let obj = JSON.parse(this.$route.query.obj)
-			this.shopAdd = setObj(obj, this.shopAdd)
+			
+			
+			console.log('zhengti',this.shopAdd)
 		}
 		if (this.$route.query.id) {
+			let obj = JSON.parse(this.$route.query.obj)
 			this.update = true
 			this.id = this.$route.query.id
 			UpdateInfo(this.id).then((res) => {
-				this.shopAdd.productAttributeValueList = res.data.data.productAttributeValueList
-				this.shopAdd.productAttributeCategoryId = res.data.data.productAttributeCategoryId
-				this.shopAdd.skuStockList = res.data.data.skuStockList
+				obj.detailMobileHtml = res.data.data.detailMobileHtml
+				obj.productAttributeValueList = res.data.data.productAttributeValueList
+				obj.productAttributeCategoryId = res.data.data.productAttributeCategoryId
+				obj.skuStockList = res.data.data.skuStockList
+				this.shopAdd = setObj(obj, this.shopAdd)
 			}).catch((err) => {
 				
 			});

@@ -166,23 +166,24 @@ export default {
 
 		},
 		async put (name, file) {
-			console.log(file.size);
+			let result;
 			this.num = 0;
 			if (this.time) {
 				if (new Date(this.time) > new Date()) {
 					try {
-						// if (file.size > size) {
-
-						// }else{
-						//   let result = await this.store.put(name, file);
-						// }
+						console.log(file.size / 1024 / 1024);
+						if (file.size / 1024 / 1024 > 20) {
+							 result = await this.store.multipartUpload(name, file, {
+								progress: this.schedule
+								// parallel: 10,
+								// partSize: 102400
+							});
+						} else {
+							 result = await this.store.put(name, file);
+						}
 
 						// let result = await this.store.put(name, file);
-						let result = await this.store.multipartUpload(name, file, {
-							progress: this.schedule
-							// parallel: 10,
-							// partSize: 102400
-						});
+
 						//   // let res = await this.store.list({
 						//   //   "max-keys": 5
 						//   // });

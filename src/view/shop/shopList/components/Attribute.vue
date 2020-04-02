@@ -305,8 +305,7 @@ export default {
 				let data = this.handleStarData(obj)
 				this.tableList.data1 = data;
 			}
-
-			this.tableList.columns = columnsStar
+			this.$set(this.tableList, 'columns', columnsStar)
 		},
 		//生成table的data
 		handleStarData (obj) {
@@ -392,7 +391,9 @@ export default {
 	watch: {
 		getid: {
 			handler (newVal) {
+				
 				AttriList({ attributeCategoryId: newVal, attributeType: 0, pageNum: 1, pageSize: 1000 }).then((res) => {
+					
 					res.data.data.forEach(item => {
 						item.name = ''
 						//单选是radio需要绑定的是字符串，多选则需要绑定数组
@@ -413,8 +414,10 @@ export default {
 							})
 							item.inputList = list
 						}
+						
 						item.index = item.inputList.length
 						let set;
+						console.log('我看看你刷新了几次',this.value.productAttributeValueList.length)
 						if (this.value.productAttributeValueList.length) {
 							this.value.productAttributeValueList.forEach(items => {
 								if (item.attributeId === items.productAttributeId) {
@@ -451,9 +454,11 @@ export default {
 		},
 		getSku: {
 			handler (newval) {
-				console.log('data1', newval)
+				
 				if (newval.length) {
-					this.tableList.data1 = newval
+					// this.handleStarTable()
+					this.$set(this.tableList,'data1',[...newval])
+					console.log(this.tableList,'监听之后')
 					this.star = true
 				}
 			},
@@ -472,6 +477,7 @@ export default {
 		this.editor.customConfig.uploadImgShowBase64 = true;
 		this.editor.customConfig.showLinkImg = false;
 		this.editor.create();
+		console.log(this.value.productAttributeValueList.length,'页面挂在时的长度')
 		if (this.value.detailMobileHtml) {
 			this.editor.txt.html(this.value.detailMobileHtml)
 		}

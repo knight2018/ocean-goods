@@ -209,15 +209,7 @@ export default {
 											let newObj = JSON.parse(JSON.stringify(params.row))
 											let obj = QueryArray(newObj.productCategoryId, this.attrList)
 											console.log(obj)
-											let productCategoryId = undefined
-											if (obj.parentIndex) {
-												productCategoryId = [this.attrList[obj.parentIndex].value, newObj.productCategoryId + '']
-
-											} else {
-												productCategoryId = [newObj.productCategoryId]
-											}
-
-											newObj.productCategoryId = productCategoryId
+											newObj.productCategoryId = [this.attrList[obj.parentIndex].value, newObj.productCategoryId + '']
 											this.$router.push({
 												name: '/shopAdd',
 												query: {

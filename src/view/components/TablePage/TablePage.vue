@@ -1,6 +1,14 @@
 <template>
 	<div class="flex just">
-		<Table :columns="columnsPage" :highlight-row='highlight' :data="dataPage" @on-selection-change="getSelect" @on-current-change="getRow" ref="tables" style="width:100%;"></Table>
+		<Table
+			:columns="columnsPage"
+			:highlight-row="highlight"
+			:data="dataPage"
+			@on-selection-change="getSelect"
+			@on-current-change="getRow"
+			ref="tables"
+			style="width:100%;"
+		></Table>
 		<Page
 			:total="totalPage"
 			@on-change="handlePage"
@@ -33,7 +41,7 @@ export default {
 			type: Number,
 			default: 0
 		},
-		highlight:{
+		highlight: {
 			type: Boolean,
 			default: false
 		},
@@ -46,7 +54,7 @@ export default {
 			default: 10
 		},
 		handleSearch: {},
-		getId:{}
+		getId: {}
 	},
 	data () {
 		return {
@@ -61,16 +69,15 @@ export default {
 	methods: {
 		handlePage (index) {
 			this.page = index;
-			this.handleSearch('page');
 		},
 		handleLimit (limit) {
 			this.limitPage = limit;
 		},
-		getSelect (id){
+		getSelect (id) {
 			this.getId && this.getId(id)
 		},
-		getRow (row){
-			this.$emit('get-row',row)
+		getRow (row) {
+			this.$emit('get-row', row)
 		}
 	},
 	watch: {
@@ -94,6 +101,7 @@ export default {
 		},
 		page (val) {
 			this.$emit("input", val);
+			this.handleSearch('page');
 		}
 	},
 	created () {
@@ -102,10 +110,10 @@ export default {
 </script>
 
 <style scoped>
-.just{
+.just {
 	flex-direction: column;
 }
-.page-right{
-	align-self: flex-end
+.page-right {
+	align-self: flex-end;
 }
 </style>
