@@ -13,7 +13,13 @@
 			@lastStep="handleBack"
 			@nextStep="handleNext"
 		></Promotion>
-		<Attribute v-model="shopAdd" v-show="index === 2" @lastStep="handleBack" @handleAdd="handleAdd" :productAttributeCategoryId="productAttributeCategoryId"></Attribute>
+		<Attribute
+			v-model="shopAdd"
+			v-show="index === 2"
+			@lastStep="handleBack"
+			@handleAdd="handleAdd"
+			:productAttributeCategoryId="productAttributeCategoryId"
+		></Attribute>
 	</div>
 </template>
 <script>
@@ -74,7 +80,8 @@ export default {
 		},
 		handleAdd () {
 			let shopAdd = JSON.parse(JSON.stringify(this.shopAdd))
-			shopAdd.productCategoryId =shopAdd.productCategoryId[1] //shopAdd.productCategoryId.length===2?shopAdd.productCategoryId[1]:shopAdd.productCategoryId[0]
+			shopAdd.productCategoryId = shopAdd.productCategoryId[1] //shopAdd.productCategoryId.length===2?shopAdd.productCategoryId[1]:shopAdd.productCategoryId[0]
+			shopAdd.serviceIds = shopAdd.serviceIds.join(',')
 			if (this.update) {
 				productUpdate(this.id, shopAdd).then((res) => {
 					this.$Message.success('修改商品成功')
@@ -94,9 +101,9 @@ export default {
 	},
 	mounted () {
 		if (this.$route.query.obj) {
-			
-			
-			console.log('zhengti',this.shopAdd)
+
+
+			console.log('zhengti', this.shopAdd)
 		}
 		if (this.$route.query.id) {
 			let obj = JSON.parse(this.$route.query.obj)
@@ -107,9 +114,11 @@ export default {
 				obj.productAttributeValueList = res.data.data.productAttributeValueList
 				obj.productAttributeCategoryId = res.data.data.productAttributeCategoryId
 				obj.skuStockList = res.data.data.skuStockList
+				obj.serviceIds = res.data.data.serviceIds && res.data.data.serviceIds.split(',')
 				this.shopAdd = setObj(obj, this.shopAdd)
+				console.log(this.shopAdd)
 			}).catch((err) => {
-				
+
 			});
 		} else {
 			this.update = false

@@ -4,6 +4,7 @@
 			:columns="columnsPage"
 			:highlight-row="highlight"
 			:data="dataPage"
+			:loading="loading"
 			@on-selection-change="getSelect"
 			@on-current-change="getRow"
 			ref="tables"
@@ -40,6 +41,10 @@ export default {
 		total: {
 			type: Number,
 			default: 0
+		},
+		loading:{
+			type: Boolean,
+			default: false
 		},
 		highlight: {
 			type: Boolean,

@@ -28,7 +28,7 @@
 				<Input v-model="formCategory.fontColor" placeholder="例：#ffffff" style="width:300px" />
 			</FormItem> -->
 			<FormItem prop="icon" label="一级分类图片" v-if="formCategory.parentId == 0">
-				<UploadImg v-model="formCategory.icon" :off="off"></UploadImg>
+				<UploadImg v-model="formCategory.icon" :off="off"></UploadImg>	
 			</FormItem>
 			<FormItem>
 				<Button
@@ -162,17 +162,17 @@ export default {
 		// 	this.formCategory.showStatus = query.showStatus;
 		// 	this.formCategory.sort = query.sort
 		// }
-		if (this.formCategory.parentId === 0 && this.categoryId) {
+		if (this.$route.query.id === 0 && this.categoryId) {
 			this.disbaled = true;
 			this.formCategory.classify = 2
 		}
+		
 		let parentId = 0,
 			pageNum = 1,
 			pageSize = 100;
 		productCategoryList({ parentId, pageNum, pageSize }).then((res) => {
-			console.log(this.formCategory.parentId)
 			let list = []
-			if (this.formCategory.parentId == 0) {
+			if (this.$route.query.id === 0) {
 				list.push({
 					value: 0,
 					label: '无上级分类'
@@ -185,6 +185,7 @@ export default {
 				})
 			})
 			this.shopList = list;
+			this.formCategory.parentId = this.$route.query.id
 		}).catch((err) => {
 
 		});

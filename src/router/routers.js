@@ -275,7 +275,34 @@ export default [
         },
         component: () => import('@/view/order/reason')
       },
-      
+      // {
+      //   path: '/hoc',
+      //   name: 'hoc',
+      //   meta: {
+      //     title: '逗你玩',
+      //     icon: 'md-help'
+      //   },
+      //   component: () => import('@/view/testHoc/testHoc')
+      // },
+    ]
+  },
+  {
+    path: '/coupon',
+    name: 'coupon',
+    component: Main,
+    meta: {
+      title: '弹层'
+    },
+    children: [
+      {
+        path: '/couponList',
+        name: 'couponList',
+        meta: {
+          title: '优惠券',
+          icon: 'ios-flash'
+        },
+        component: () => import('@/view/coupon/couponList')
+      }
     ]
   },
   {

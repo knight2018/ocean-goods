@@ -90,9 +90,12 @@ export default {
 						CarouselAdd(this.formBanner).then((res) => {
 							this.$Message.success('添加成功')
 							this.off = 1;
-							this.$router.push({
-								name: '/banner'
+							this.$nextTick(() => {
+								this.$router.push({
+									name: '/banner'
+								})
 							})
+
 						}).catch((err) => {
 
 						});

@@ -68,7 +68,10 @@
 </template>
 <script>
 import E from "wangeditor";
+import config from '@/config'
+const baseUrl = process.env.NODE_ENV === 'development' ? config.baseUrl.dev : config.baseUrl.pro
 import { productAttributeList } from '../../../../api/data'
+import { getToken } from '@/libs/util'
 import { AttriList } from '../../../../api/attr'
 import { isArray } from 'util';
 export default {
@@ -391,9 +394,9 @@ export default {
 	watch: {
 		getid: {
 			handler (newVal) {
-				
+
 				AttriList({ attributeCategoryId: newVal, attributeType: 0, pageNum: 1, pageSize: 1000 }).then((res) => {
-					
+
 					res.data.data.forEach(item => {
 						item.name = ''
 						//单选是radio需要绑定的是字符串，多选则需要绑定数组
@@ -414,10 +417,10 @@ export default {
 							})
 							item.inputList = list
 						}
-						
+
 						item.index = item.inputList.length
 						let set;
-						console.log('我看看你刷新了几次',this.value.productAttributeValueList.length)
+						console.log('我看看你刷新了几次', this.value.productAttributeValueList.length)
 						if (this.value.productAttributeValueList.length) {
 							this.value.productAttributeValueList.forEach(items => {
 								if (item.attributeId === items.productAttributeId) {
@@ -435,11 +438,11 @@ export default {
 						}
 					})
 					this.attrList = res.data.data
-					if(this.star){
+					if (this.star) {
 						this.handleStarTable(true)
 						this.star = false
 					}
-					
+
 				}).catch((err) => {
 
 				});
@@ -454,11 +457,11 @@ export default {
 		},
 		getSku: {
 			handler (newval) {
-				
+
 				if (newval.length) {
 					// this.handleStarTable()
-					this.$set(this.tableList,'data1',[...newval])
-					console.log(this.tableList,'监听之后')
+					this.$set(this.tableList, 'data1', [...newval])
+					console.log(this.tableList, '监听之后')
 					this.star = true
 				}
 			},
@@ -474,10 +477,41 @@ export default {
 	},
 	mounted () {
 		this.editor = new E(this.$refs.editor);
-		this.editor.customConfig.uploadImgShowBase64 = true;
-		this.editor.customConfig.showLinkImg = false;
+		console.log(this.editor.customConfig, 'nimabi')
+		this.editor.customConfig.uploadImgShowBase64 = false;
+		this.editor.customConfig.pasteIgnoreImg = true
+		this.editor.customConfig.uploadFileName = 'file'
+		this.editor.customConfig.uploadImgServer = `${baseUrl}/file/upload`
+		this.editor.customConfig.uploadImgHeaders = {
+			'Authorization': getToken()
+		};
+		this.editor.customConfig.showLinkImg  = false
+		this.editor.customConfig.uploadImgHooks = {
+			before: function (xhr, editor, files) {
+
+			},
+			success: function (xhr, editor, result) {
+				console.log("上传成功");
+			},
+			fail: function (xhr, editor, result) {
+				console.log(xhr, editor, result);
+			},
+			error: function (xhr, editor) {
+				console.log("上传出错");
+			},
+			timeout: function (xhr, editor) {
+				console.log("上传超时");
+			},
+			customInsert: function (insertImg, result, editor) {
+
+				let { url } = result.data
+				insertImg(url)
+
+				// result 必须是一个 JSON 格式字符串！！！否则报错
+			}
+		}
 		this.editor.create();
-		console.log(this.value.productAttributeValueList.length,'页面挂在时的长度')
+		console.log(this.value.productAttributeValueList.length, '页面挂在时的长度')
 		if (this.value.detailMobileHtml) {
 			this.editor.txt.html(this.value.detailMobileHtml)
 		}

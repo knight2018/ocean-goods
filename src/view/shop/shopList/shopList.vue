@@ -76,7 +76,7 @@ export default {
 				limit: 10
 			},
 			idList: [],
-			delid: [],
+			delid: undefined,
 			statusList: [
 				{
 					value: 0,
@@ -229,7 +229,8 @@ export default {
 									},
 									on: {
 										click: () => {
-											this.delId = params.row.attributeId;
+											
+											this.delid = params.row.productId
 											this.modalOff = true
 										}
 									}
@@ -335,8 +336,13 @@ export default {
 			this.handleSearch()
 		},
 		asyncOK () {
-			this.handleDel(this.delid)
+			this.handleDel([this.delid])
 			this.modalOff = false
+		}
+	},
+	watch :{
+		'delid' (val){
+			console.log('你特么什么时候变的',val)
 		}
 	},
 	created () {
@@ -373,4 +379,5 @@ export default {
 .just {
 	align-items: flex-start;
 }
+
 </style>

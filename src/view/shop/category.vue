@@ -126,11 +126,12 @@ export default {
 										click: () => {
 											// const { categoryId, categoryName, classify, showStatus, sort, parentId } = params.row
 											let obj = JSON.stringify(params.row)
+											console.log(params.row)
 											this.$router.push({
 												name: '/categoryAdd',
 												query: {
 													// categoryId: categoryId,
-													id: this.parentId,
+													id: params.row.parentId,
 													// categoryName,
 													// classify,
 													// showStatus,
@@ -193,7 +194,7 @@ export default {
 		},
 		async productCategory (categoryId, data, off) {
 			if (off) {
-				productCategoryDelete(categoryId).then((res) => {
+				productCategoryDelete(categoryId,data).then((res) => {
 					this.callback()
 					this.handleSearch()
 					this.$Message.warning('删除成功')

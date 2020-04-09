@@ -67,7 +67,7 @@ export const productCategoryUpdate = (categoryId, data) => {
 }
 
 //删除商品分类
-export const productCategoryDelete = (categoryId) => {
+export const productCategoryDelete = (categoryId,data) => {
   return axios.request({
     url: `/productCategory/delete/${categoryId}`,
     data,
@@ -132,6 +132,18 @@ export const sts = (userName) => {
     url: '/file/sts',
     method: 'get',
     params
+  })
+}
+
+
+//上传图片
+export const fileUpload = (file) => {
+  return axios.request({
+    url: `/file/upload`,
+    params:{
+      file
+    },
+    method: 'post',
   })
 }
 

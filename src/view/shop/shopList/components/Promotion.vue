@@ -9,9 +9,9 @@
 			</FormItem>
 			<FormItem prop="serviceIds" label="服务保证" v-if="classify===1">
 				<CheckboxGroup v-model="value.serviceIds">
-					<Checkbox :label="1">无忧退货</Checkbox>
-					<Checkbox :label="2" >快速退款</Checkbox>
-					<Checkbox :label="3">免费包邮</Checkbox>
+					<Checkbox label="1">无忧退货</Checkbox>
+					<Checkbox label="2" >快速退款</Checkbox>
+					<Checkbox label="3">免费包邮</Checkbox>
 				</CheckboxGroup>
 			</FormItem>
 			<FormItem>

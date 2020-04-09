@@ -19,6 +19,7 @@ export default {
   baseUrl: {
     dev: '',
     pro: 'https://fish-test.zhonglehd.cn/appletAdmin'
+    // pro: 'https://applet.oceandaddy.cn/appletAdmin'
   },
   /**
    * @description 默认打开的首页的路由name值，默认为home

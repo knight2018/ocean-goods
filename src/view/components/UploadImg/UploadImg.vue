@@ -297,6 +297,7 @@ export default {
 		}
 	},
 	beforeDestroy () {
+		console.log(this.off)
 		if (this.off === 1 || this.off === 2) {
 			if (this.off === 2) {
 				console.log(this.addList);
