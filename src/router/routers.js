@@ -291,7 +291,7 @@ export default [
     name: 'coupon',
     component: Main,
     meta: {
-      title: '弹层'
+      title: '营销'
     },
     children: [
       {
@@ -302,7 +302,34 @@ export default [
           icon: 'ios-flash'
         },
         component: () => import('@/view/coupon/couponList')
-      }
+      },
+      {
+        path: '/moneyList',
+        name: 'moneyList',
+        meta: {
+          title: '金额设置',
+          icon: 'logo-bitcoin'
+        },
+        component: () => import('@/view/coupon/moneyList')
+      },
+      {
+        path: '/moneyAdd',
+        name: 'moneyAdd',
+        meta: {
+          title: '添加金额',
+          icon: 'logo-bitcoin'
+        },
+        component: () => import('@/view/coupon/Add/moneyAdd')
+      },
+      {
+        path: '/category',
+        name: 'category',
+        meta: {
+          title: '品类设置',
+          icon: 'ios-pricetag'
+        },
+        component: () => import('@/view/coupon/category')
+      },
     ]
   },
   {

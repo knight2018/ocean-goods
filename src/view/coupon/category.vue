@@ -5,7 +5,7 @@
 </template>
 <script>
 import searchListHOC from '../components/hoc/searchListHOC'
-import CouponSearch from './wrapped/couponSearch'
+import CategorySearch from './wrapped/categorySearch'
 let promiseFn = (data) => {
 	return new Promise((resolve) => {
 		setTimeout(() => {
@@ -13,7 +13,7 @@ let promiseFn = (data) => {
 		}, 1000)
 	})
 }
-let Hoc = searchListHOC(CouponSearch, promiseFn)
+let Hoc = searchListHOC(CategorySearch, promiseFn)
 export default {
 	components: { Hoc },
 	data () {
