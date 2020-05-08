@@ -304,6 +304,15 @@ export default [
         component: () => import('@/view/coupon/couponList')
       },
       {
+        path: '/couponAdd',
+        name: 'couponAdd',
+        meta: {
+          title: '添加优惠券',
+          icon: 'logo-bitcoin',
+        },
+        component: () => import('@/view/coupon/Add/couponAdd')
+      },
+      {
         path: '/moneyList',
         name: 'moneyList',
         meta: {
@@ -317,19 +326,153 @@ export default [
         name: 'moneyAdd',
         meta: {
           title: '添加金额',
-          icon: 'logo-bitcoin'
+          icon: 'logo-bitcoin',
+          hideInMenu: true
         },
         component: () => import('@/view/coupon/Add/moneyAdd')
       },
       {
-        path: '/category',
-        name: 'category',
+        path: '/couponCategory',
+        name: 'couponCategory',
         meta: {
           title: '品类设置',
           icon: 'ios-pricetag'
         },
         component: () => import('@/view/coupon/category')
       },
+      {
+        path: '/couponCategoryAdd',
+        name: 'couponCategoryAdd',
+        meta: {
+          title: '添加品类',
+          icon: 'logo-bitcoin',
+          hideInMenu: true
+        },
+        component: () => import('@/view/coupon/Add/categoryAdd')
+      },
+    ]
+  },
+  {
+    path: '/activity',
+    name: 'activity',
+    component: Main,
+    meta: {
+      title: '活动'
+    },
+    children: [
+      {
+        path: '/activityList',
+        name: 'activityList',
+        meta: {
+          title: '活动列表',
+          icon: 'md-clipboard'
+        },
+        component: () => import('@/view/activity/activityList')
+      },
+      {
+        path: '/activityAdd',
+        name: 'activityAdd',
+        meta: {
+          title: '添加品类',
+          icon: 'logo-bitcoin',
+          // hideInMenu: true
+        },
+        component: () => import('@/view/activity/add/activityAdd')
+      }
+    ]
+  },
+  {
+    path: '/integral',
+    name: 'integral',
+    component: Main,
+    meta: {
+      title: '积分规则'
+    },
+    children: [
+      {
+        path: '/integralList',
+        name: 'integralList',
+        meta: {
+          title: '积分规则',
+          icon: 'logo-yen'
+        },
+        component: () => import('@/view/integral/integralList')
+      },
+    ]
+  },
+  {
+    path: '/user',
+    name: 'user',
+    component: Main,
+    meta: {
+      title: '用户'
+    },
+    children: [
+      {
+        path: '/userList',
+        name: 'userList',
+        meta: {
+          hideInMenu: false,
+          title: '用户列表'
+        },
+        component: () => import('@/view/userList/userList')
+      },
+      {
+        path: '/userInfo',
+        name: 'userInfo',
+        meta: {
+          hideInMenu: true,
+          title: '用户详情'
+        },
+        component: () => import('@/view/userList/userInfo')
+      },
+    ]
+  },
+  // {
+  //   path: '/sku',
+  //   name: 'sku',
+  //   component: Main,
+  //   meta: {
+  //     title: 'sku'
+  //   },
+  //   children: [
+  //     {
+  //       path: '/skuList',
+  //       name: 'skuList',
+  //       meta: {
+  //         hideInMenu: false,
+  //         title: 'skuList'
+  //       },
+  //       component: () => import('@/view/sku/sku')
+  //     },
+  //   ]
+  // },
+  {
+    path: '/system',
+    name: '系统管理',
+    component: Main,
+    meta: {
+      title: '系统管理'
+    },
+    children: [
+      {
+        path: '/authority',
+        name: '管理员管理',
+        meta: {
+          hideInMenu: false,
+          title: '管理员管理'
+        },
+        component: () => import('@/view/system/authority')
+      },
+      {
+        path: '/systemList',
+        name: '权限管理',
+        meta: {
+          hideInMenu: false,
+          title: '权限管理'
+        },
+        component: () => import('@/view/system/systemList')
+      }
     ]
   },
   {

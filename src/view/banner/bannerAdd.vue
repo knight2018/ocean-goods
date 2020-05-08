@@ -33,7 +33,7 @@
 <script>
 import { setObj } from '../../libs/tools'
 import { CarouselAdd, carouselUpdate } from '../../api/banner'
-import { productItem } from '../../api/shop'
+import { productDetial, productItem } from '../../api/shop'
 export default {
 	data () {
 		return {
@@ -91,7 +91,7 @@ export default {
 							this.$Message.success('添加成功')
 							this.off = 1;
 							this.$nextTick(() => {
-								this.$router.push({
+								this.$router.replace({
 									name: '/banner'
 								})
 							})
@@ -107,7 +107,9 @@ export default {
 			})
 		},
 		handleAddShop () {
+			console.log(this.formBanner.productSn)
 			this.show = true
+			
 		},
 		handleChange (row) {
 			this.shopList = [row]
@@ -116,10 +118,11 @@ export default {
 		},
 		getShopList (id) {
 			productItem(id).then((res) => {
+				console.log(res)
 				this.shopList = [
 					{
-						value: res.data.data.productSn,
-						label: res.data.data.productName
+						value: res.data.data.productSn || null,
+						label: res.data.data.productName || ''
 					}
 				]
 			}).catch((err) => {
@@ -130,6 +133,7 @@ export default {
 	mounted () {
 		if (this.$route.query.obj) {
 			let obj = JSON.parse(this.$route.query.obj)
+			console.log(obj, '???')
 			this.formBanner = setObj(obj, this.formBanner)
 			this.getShopList(this.formBanner.productSn)
 		}

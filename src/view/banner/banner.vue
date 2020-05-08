@@ -107,7 +107,7 @@ export default {
 										carouselUpdate(params.row.id, data).then((res) => {
 											this.$Message.success('修改成功')
 										}).catch((err) => {
-											
+
 										});
 									}
 								},
@@ -155,14 +155,18 @@ export default {
 									on: {
 										click: () => {
 											let data = {
-											carouselStatus: 0
-										}
-										carouselUpdate(params.row.id, data).then((res) => {
-											this.$Message.success('删除成功')
-											this.handleSearch()
-										}).catch((err) => {
-											
-										});
+												carouselStatus: 0
+											}
+											carouselUpdate(params.row.id, data).then((res) => {
+												this.$Message.success('删除成功')
+												if (this.tableList.data1.length !== 1) {
+													this.handleSearch('page')
+												} else {
+													this.handleSearch()
+												}
+											}).catch((err) => {
+
+											});
 										}
 									}
 								}, '删除')
@@ -227,7 +231,7 @@ export default {
 			})
 		}
 	},
-	created(){
+	created () {
 		this.handleSearch()
 	}
 }

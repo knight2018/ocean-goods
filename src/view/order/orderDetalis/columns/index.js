@@ -14,7 +14,7 @@ export const basicInformation = [
     },
     {
         title: '用户账号',
-        key: 'customerId',
+        key: 'customerName',
         align: 'center'
     },
     {
@@ -98,6 +98,7 @@ export const consignee = [
         align: 'center'
     },
 ]
+
 export const commodityInformation = [
     {
         title: '商品图片',
@@ -147,7 +148,17 @@ export const commodityInformation = [
     },
     {
         title: '小计',
-        key: 'productPrice',
+        key: 'realAmount',
+        align: 'center'
+    },
+    {
+        title: '评价内容',
+        key: 'commentContent',
+        align: 'center'
+    },
+    {
+        title: '评价时间',
+        key: 'commentCreateTime',
         align: 'center'
     },
 ]
@@ -247,9 +258,6 @@ let getPay = (payType) => {
             str = '未支付'
             break;
         case 1:
-            str = '支付宝'
-            break;
-        case 2:
             str = '微信'
             break;
         default:
@@ -259,7 +267,7 @@ let getPay = (payType) => {
     return str
 }
 
-const getStatus = (status) => {
+export const getStatus = (status) => {
     let str = ''
     switch (status) {
         case 0:
@@ -272,12 +280,15 @@ const getStatus = (status) => {
             str = '已发货'
             break;
         case 3:
-            str = '已完成'
+            str = '待评价'
             break;
         case 4:
-            str = '已关闭'
+            str = '已评价'
             break;
         case 5:
+            str = '已取消'
+            break;
+        case 6:
             str = '无效订单'
             break;
         default:

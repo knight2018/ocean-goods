@@ -176,7 +176,11 @@ export default {
 											}
 											productUpdate(params.row.id, data).then((res) => {
 												this.$Message.success('删除成功')
-												this.handleSearch()
+												if (this.tableList.data1.length !== 1) {
+													this.handleSearch('page')
+												} else {
+													this.handleSearch()
+												}
 											}).catch((err) => {
 
 											});
@@ -197,7 +201,7 @@ export default {
 			if (off !== 'page') {
 				this.search.page = 1
 			}
-			
+
 			productList(this.titleList[this.index].id).then((res) => {
 				this.tableList.data1 = res.data.data
 				console.log(this.tableList.data1)
@@ -243,7 +247,7 @@ export default {
 		handleAdd () {
 			this.$router.push({
 				name: '/sectionAdd',
-				query:{
+				query: {
 					id: this.titleList[this.index].id
 				}
 			})

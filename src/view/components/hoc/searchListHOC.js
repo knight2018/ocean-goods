@@ -3,14 +3,15 @@
 //现在我们做一个约定，由于要传入的数据比较多，我们不能一个个作为args来传入，所以我们将传递数据放在wrapped组件里面
 //search是一个对象，他是作为查询条件存在的
 //columns作为表格头部存在
-//关于传入的promiseFn 获取的格式暂时定为后台返回的格式data:{data:[]}，如有需要可以手动更改
-//跳转页面默认的wrapped默认是handleAdd
+//关于传入的promiseFn 获取的格式暂时定为后台返回的格式data:{}，如有需要可以手动更改
+//跳转页面在wrapped里默认是handleAdd
 const searhListHOC = (wrapped, promiseFn) => {
     return {
         data () {
             return {
                 loading: false,
                 result: {},
+                add: false,
                 tableList: {
                     columns: [],
                     data1: [],
@@ -45,7 +46,8 @@ const searhListHOC = (wrapped, promiseFn) => {
             }
         },
         mounted () {
-            let { columns } = this.$refs.wrapped;
+            let { columns, add } = this.$refs.wrapped;
+            this.add = add;
             this.tableList.columns = columns
             this.handleSearch()
         },
@@ -64,8 +66,8 @@ const searhListHOC = (wrapped, promiseFn) => {
         },
         render (h) {
             return (<div>
-                <wrapped ref="wrapped" loading={this.loading} handleSearch={this.handleSearch}  on={this.$listeners}></wrapped>
-                <tabBar show={true} add={this.handleAdd}></tabBar>
+                <wrapped ref="wrapped" loading={this.loading} handleSearch={this.handleSearch} dataLength={this.tableList.data1.length}></wrapped>
+                <tabBar show={true} add={this.handleAdd} style={this.add?'display: none':''}></tabBar>
                 <TablePage
                     columns={this.tableList.columns}
                     data={this.tableList.data1}

@@ -431,3 +431,24 @@ export const setTitle = (routeItem, vm) => {
 }
 
 
+
+/**
+ * @description 根据当前的有列表得出已选中的权限
+ * @param {Object} newList 后台返回路由数组
+ * @param {Object} oldList 前端本地储存的路由数组
+ */
+export const getList = (newList, oldList) => {
+  console.log(newList, oldList)
+  const list = JSON.parse(JSON.stringify(oldList))
+  oldList.forEach((oldItem, index) => {
+    list[index].checkAll = false
+    list[index].checkAllGroup = []
+    newList.forEach(newItem => {
+      if (newItem.name === oldItem.name) {
+        list[index].checkAll = newItem.checkAll
+        list[index].checkAllGroup = newItem.checkAllGroup
+      }
+    })
+  })
+  return list
+}

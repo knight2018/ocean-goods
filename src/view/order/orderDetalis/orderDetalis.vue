@@ -16,8 +16,8 @@
 						</div>
 						<div>
 							<Button @click="handleDel" v-if="message.status===0">删除订单</Button>
-							<Button class="mg-lf" @click="handleRemark" v-if="message.status===1">确认发货</Button>
-							<Button class="mg-lf" @click="handleRemark" v-if="message.status===1">修改收货人信息</Button>
+							<Button class="mg-lf" @click="handleDeliver" v-if="message.status===1">确认发货</Button>
+							<!-- <Button class="mg-lf" @click="handleRemark" v-if="message.status===1">修改收货人信息</Button> -->
 							<!-- <Button class="mg-lf" @click="handleRemark" v-if="message.status!==0">发送站内信</Button> -->
 							<Button class="mg-lf" @click="handleRemark">备注订单</Button>
 						</div>
@@ -71,7 +71,7 @@
 <script>
 import { basicInformation, basicInformation2, consignee, commodityInformation, priceInformation, priceInformation2, operation } from './columns'
 import ModelTable from '../components/ModelTable'
-import { getOrder, orderNote } from '../../../api/order'
+import { getOrder, orderNote, orderDelivery } from '../../../api/order'
 export default {
 	components: { ModelTable },
 	data () {
@@ -109,12 +109,15 @@ export default {
 					str = '已发货'
 					break;
 				case 3:
-					str = '已完成'
+					str = '待评价'
 					break;
 				case 4:
-					str = '已关闭'
+					str = '已评价'
 					break;
 				case 5:
+					str = '已取消'
+					break;
+				case 6:
 					str = '无效订单'
 					break;
 				default:
@@ -144,6 +147,14 @@ export default {
 		handleRemark () {
 			this.modal1 = true
 		},
+		handleDeliver () {
+			orderDelivery(this.message.id).then((res) => {
+				this.$Message.success('发货成功')
+				this.handleSearch(this.message.id);
+			}).catch((err) => {
+
+			});
+		},
 		ok () {
 			let data = {
 				note: this.remark,
@@ -153,8 +164,8 @@ export default {
 			}
 			orderNote(this.message.id, data).then((res) => {
 				this.modal1 = false
-                this.$Message.success('备注成功')
-                this.handleSearch(this.message.id)
+				this.$Message.success('备注成功')
+				this.handleSearch(this.message.id)
 			}).catch((err) => {
 				this.loading = false;
 				this.$nextTick(() => {
@@ -168,8 +179,8 @@ export default {
 		handleSearch (id) {
 			getOrder(id).then((res) => {
 				console.log(res)
-				this.message = res.data.data
-				if (this.message.status === 4) {
+				this.message = res.data.data	
+				if (this.message.status === 5) {
 					this.error = 'error'
 					this.titleList[0] = '已关闭'
 				} else {

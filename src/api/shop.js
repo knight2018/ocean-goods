@@ -110,3 +110,11 @@ export const productItem = (productSn) => {
         method: 'get',
     })
 }
+//根据id查询商品
+export const productDetial = (productId) => {
+    return axios.request({
+        url: `/product/${productId}`,
+        params:{},
+        method: 'get',
+    })
+}

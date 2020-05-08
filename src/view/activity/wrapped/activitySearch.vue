@@ -3,17 +3,17 @@
 		<Search :handleSearch="handleSearch" :handleClear="handleClear" :loading="loading">
 			<div class="flex">
 				<div>
-					<span>名称：</span>
+					<span>活动名称：</span>
 					<Input
 						style="width:200px;"
 						v-model="search.name"
 						@on-enter="handleSearch"
-						placeholder="请输入名称"
+						placeholder="请输入活动名称"
 					/>
 				</div>
 				<div class="mg-30">
-					<span>优惠券类型：</span>
-					<Select v-model="search.type" style="width:220px" clearable placeholder="请选择优惠券类型（默认全部）">
+					<span>活动状态：</span>
+					<Select v-model="search.status" style="width:220px" clearable placeholder="请选择活动状态（默认全部）">
 						<Option v-for="item in typeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
 					</Select>
 				</div>
@@ -30,13 +30,13 @@ export default {
 		},
 		handleSearch: {
 
-		}
+		},
 	},
 	data () {
 		return {
 			search: {
 				name: '',
-				type: null
+				status: null
 			},
 			columns: [
 				{
@@ -45,23 +45,19 @@ export default {
 					align: 'center'
 				},
 				{
-					title: '名称',
+					title: '活动名称',
 					key: 'name',
 					align: 'center'
 				},
 				{
-					title: '优惠券类型',
-					key: 'type',
-					align: 'center',
-                    render:(h,params)=>{
-                        return h('span',{},this.typeList[params.row.type-1].label)
-                    }
+					title: '活动有效期',
+					key: 'endTime',
+					align: 'center'
 				},
 				{
-					title: '优惠金额',
-					key: 'fuck',
+					title: '活动状态',
+					key: 'status',
 					align: 'center'
-
 				},
 				{
 					title: '创建时间',
@@ -92,11 +88,10 @@ export default {
 								},
 								on: {
 									click: () => {
-										let newObj = JSON.parse(JSON.stringify(params.row))
 										this.$router.push({
-											name: 'moneyAdd',
+											name: 'activityAdd',
 											query: {
-												obj: JSON.stringify(newObj)
+												id: params.row.id
 											}
 										})
 									}
@@ -109,34 +104,33 @@ export default {
 			typeList: [
 				{
 					value: 1,
-					label: '立减'
+					label: '上线'
 				},
 				{
 					value: 2,
-					label: '满减'
+					label: '下线'
 				},
 				{
-					value: 3,
-					label: '折扣'
-				},
-			],
-
+					value: 0,
+					label: '未开始'
+				}
+			]
 		}
 	},
 	methods: {
 		handleClear () {
 			this.search = {
 				name: '',
-				type: null
+				status: null
 			}
 			this.handleSearch()
-        },
-        handleAdd (){
-            this.$router.push('/moneyAdd')
-        }
+		},
+		handleAdd () {
+			this.$router.push('/activityAdd')
+		}
 	}
 }
 </script>
 
 <style>
-</style>
+</style>    

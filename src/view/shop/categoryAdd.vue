@@ -16,7 +16,13 @@
 				<i-switch v-model="formCategory.showStatus" :true-value="1" :false-value="0" />
 			</FormItem>
 			<FormItem prop="classify" label="实体/虚拟" v-show="formCategory.parentId">
-				<i-switch v-model="formCategory.classify" :true-value="1" :false-value="2" size="large">
+				<i-switch
+					v-model="formCategory.classify"
+					:disabled="iSwitch"
+					:true-value="0"
+					:false-value="1"
+					size="large"
+				>
 					<span slot="open">实体</span>
 					<span slot="close">虚拟</span>
 				</i-switch>
@@ -26,9 +32,9 @@
 			</FormItem>
 			<FormItem prop="fontColor" label="字体颜色" v-if="formCategory.parentId == 0">
 				<Input v-model="formCategory.fontColor" placeholder="例：#ffffff" style="width:300px" />
-			</FormItem> -->
+			</FormItem>-->
 			<FormItem prop="icon" label="一级分类图片" v-if="formCategory.parentId == 0">
-				<UploadImg v-model="formCategory.icon" :off="off"></UploadImg>	
+				<UploadImg v-model="formCategory.icon" :off="off"></UploadImg>
 			</FormItem>
 			<FormItem>
 				<Button
@@ -44,15 +50,15 @@
 import { setObj } from '../../libs/tools'
 import { productCategoryList, productCategoryAdd, productCategoryUpdate } from '../../api/data'
 
-const inputListRule = (rule, value, callback)=>{
+const inputListRule = (rule, value, callback) => {
 	if (!value) {
 		callback(new Error('不允许为空'));
 		return
 	}
 	let reg = /^#[\da-f]{3}([\da-f]{3})?$/i
-	if(reg.test(value)){
+	if (reg.test(value)) {
 		callback()
-	}else{
+	} else {
 		callback(new Error('不符合十六进制颜色规则'));
 	}
 }
@@ -61,11 +67,12 @@ export default {
 		return {
 			categoryId: null,
 			disbaled: false,
+			iSwitch: false,
 			off: 2,
 			formCategory: {
 				categoryLevel: 1,
 				categoryName: '',
-				classify: 2,
+				classify: 0,
 				parentId: 0,
 				showStatus: 0,
 				backgroundColor: '',
@@ -116,10 +123,10 @@ export default {
 				if (valid) {
 					let data = this.formCategory
 					if (this.formCategory.parentId === 0) {
-						this.formCategory.categoryLevel = 1;
-						data.classify = 0;
+						data.categoryLevel = 1;
+						data.classify = null;
 					} else {
-						this.formCategory.categoryLevel = 2;
+						data.categoryLevel = 2;
 					}
 					if (this.categoryId) {
 						productCategoryUpdate(this.categoryId, data).then((res) => {
@@ -130,7 +137,7 @@ export default {
 						}).catch((err) => {
 						});
 					} else {
-						productCategoryAdd(this.formCategory).then((res) => {
+						productCategoryAdd(data).then((res) => {
 							console.log(res)
 							this.$Message.success('添加成功')
 							this.off = 1
@@ -164,9 +171,12 @@ export default {
 		// }
 		if (this.$route.query.id === 0 && this.categoryId) {
 			this.disbaled = true;
-			this.formCategory.classify = 2
+			this.formCategory.classify = 0
 		}
-		
+		if(this.categoryId){
+			console.log(1)
+			this.iSwitch = true
+		}
 		let parentId = 0,
 			pageNum = 1,
 			pageSize = 100;

@@ -7,7 +7,7 @@
 			<FormItem prop="publishStatus" label="商品上架">
 				<i-switch v-model="value.publishStatus" :true-value="1" :false-value="0" />
 			</FormItem>
-			<FormItem prop="serviceIds" label="服务保证" v-if="classify===1">
+			<FormItem prop="serviceIds" label="服务保证" v-if="!classify">
 				<CheckboxGroup v-model="value.serviceIds">
 					<Checkbox label="1">无忧退货</Checkbox>
 					<Checkbox label="2" >快速退款</Checkbox>
@@ -38,7 +38,7 @@ export default {
 		},
 		classify: {
 			type: Number,
-			default: 1
+			default: 0
 		}
 	},
 	data () {
@@ -64,6 +64,11 @@ export default {
 		},
 		handleLast () {
 			this.$emit('lastStep')
+		}
+	},
+	watch:{
+		classify (val){
+			console.log('gengxinle',val)
 		}
 	}
 }

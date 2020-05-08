@@ -3,47 +3,39 @@
 		<div @click.stop="handleNull">
 			<Scroll class="modal-box" :height="850">
 				<div class="modal-title">
-					<span>添加商品</span>
+					<span>添加优惠券</span>
 				</div>
 				<Search :handleSearch="handleSearch" :handleClear="handleClear" :loading="loading">
 					<div>
-						<span>商品名称：</span>
+						<span>优惠券名称：</span>
 						<Input
 							style="width:200px;"
-							v-model="search.name"
+							v-model="search.couponName"
 							@on-enter="handleSearch"
-							placeholder="请输入商品名称"
+							placeholder="请输入优惠券名称："
 						/>
 					</div>
 					<div class="flex mg-tp">
 						<div>
-							<span>一级分类：</span>
-							<Select
-								v-model="search.firstCategoryId"
-								style="width:200px"
-								clearable
-								@on-change="handleIdchange"
-							>
-								<Option v-for="item in leaveOne" :value="item.value" :key="item.value">{{ item.label }}</Option>
+							<span>优惠券类型:</span>
+							<Select v-model="search.type" style="width:200px" clearable>
+								<Option v-for="item in typeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
 							</Select>
 						</div>
-						<div class="mg-30">
-							<span>二级分类：</span>
-							<Select v-model="search.secondCategoryId" style="width:200px" clearable>
-								<Option v-for="item in leaveTwo" :value="item.value" :key="item.value">{{ item.label }}</Option>
+					</div>
+					<div class="flex mg-tp">
+						<div>
+							<span>优惠券品类:</span>
+							<Select v-model="search.category" style="width:200px" clearable>
+								<Option v-for="item in categoryList" :value="item.value" :key="item.value">{{ item.label }}</Option>
 							</Select>
 						</div>
 					</div>
 				</Search>
 				<div class="shopping-box">
-					<span>选中商品:</span>
-					<div class="shopping-flex" v-show="row.productName">
-						<img :src="row.albumPics" class="shopping-img" />
-						<div class="content">
-							<p>{{row.productName}}</p>
-							<p>{{row.price}}</p>
-						</div>
-					</div>
+					<span>选中优惠券:</span>
+                    <span style="margin-left: 15px" v-show="row.name">{{row.name}}</span>
+					
 				</div>
 				<TablePage
 					:columns="tableList.columns"
@@ -63,8 +55,7 @@
 	</div>
 </template>
 <script>
-import { productCategoryList } from '../../../api/data'
-import { productList2, productDetial, productItem } from '../../../api/shop'
+import { categorySettingAll, couponList } from '../../../api/coupon'
 export default {
 	name: 'selectCommodity',
 	props: {
@@ -82,86 +73,92 @@ export default {
 			modal1: this.value,
 			loading: false,
 			search: {
-				name: '',
-				firstCategoryId: '',
-				secondCategoryId: '',
-				limit: 5,
-				page: 1
+				couponName: '',
+				type: '',
+				category: '',
+				pageSize: 5,
+				pageNum: 1
 			},
 			row: {
-				productName: '',
-				albumPics: '',
-				price: ''
+				productName: ''
 			},
-			leaveOne: [],
-			leaveTwo: [],
 			tableList: {
 				columns: [
 					{
-						title: '商品名称',
-						key: 'productName',
+						title: 'No.',
+						key: 'id',
 						align: 'center'
 					},
 					{
-						title: '商品图片',
-						key: 'albumPics',
+						title: '优惠券名称',
+						key: 'name',
+						align: 'center'
+					},
+					{
+						title: '金额设置',
+						key: 'amountSettingName',
+						align: 'center'
+					},
+					{
+						title: '品类设置',
+						key: 'categorySettingName',
+						align: 'center'
+					},
+					{
+						title: '有效期',
+						key: 'days',
+						tooltip: true,
 						align: 'center',
 						render: (h, params) => {
-							return h('img', {
-								attrs: {
-									src: params.row.albumPics,
-								},
-								style: {
-									width: '75px',
-									height: '100px',
-									padding: '10px 0'
-								}
-							})
+							return h('span', {
+
+								//  props:{
+								// 	 content: params.row.timeType ===1?`${params.row.startTime}-${params.row.endTime}`:params.row.days
+								//  }
+							}, params.row.timeType === 1 ? `${params.row.startTime}-${params.row.endTime}` : params.row.days)
 						}
-					},
-					{
-						title: '商品价格',
-						key: 'price',
-						align: 'center'
 					}
 				],
-				data1: [
-
-				],
+				data1: [],
 				total: 0
 			},
-			statusList: []
+			categoryList: [],
+			typeList: [{
+				value: 1,
+				label: '立减'
+			},
+			{
+				value: 2,
+				label: '满减'
+			},
+			{
+				value: 3,
+				label: '折扣'
+			}]
 		}
 	},
 
 	methods: {
-		handleIdchange (val) {
-			this.search.secondCategoryId = 0
-			this.getList(val)
-		},
 		handleShow () {
 			this.modal1 = !this.modal1
 		},
 		handleNull () {
-
+            return false
 		},
 		handleSearch (off) {
 			this.loading = true
 			if (off !== 'page') {
-				this.search.page = 1
+				this.search.pageNum = 1
 			}
-			let productName = this.search.name,
-				pageNum = this.search.page,
-				pageSize = this.search.limit;
-			let { firstCategoryId, secondCategoryId } = this.search
-			productList2({ productName, firstCategoryId, secondCategoryId, pageNum, pageSize }).then((res) => {
+			couponList(this.search).then((res) => {
 				this.tableList.total = res.data.total;
 				res.data.data.some(item => {
 					if (item.productSn === this.productSn) {
 						item._highlight = true
 						return
 					}
-				})
+                })
+                console.log(res.data.data)
 				this.tableList.data1 = res.data.data;
 				this.loading = false
 			}).catch((err) => {
@@ -179,49 +176,42 @@ export default {
 		handleClear () {
 			this.loading = false
 			this.search = {
-				name: '',
-				firstCategoryId: 0,
-				secondCategoryId: 0,
-				limit: 5,
-				page: 1
+				couponName: '',
+				type: '',
+				category: '',
+				pageSize: 5,
+				pageNum: 1
 			}
 		},
-		getList (id) {
-			productCategoryList({ parentId: id, pageNum: 1, pageSize: 1000 }).then((res) => {
-				console.log(res)
-				let list = []
-				res.data.data.forEach(item => {
-					list.push({
-						value: item.categoryId,
-						label: item.categoryName
-					})
+		getList () {
+			categorySettingAll().then((res) => {
+				console.log('zheshires', res)
+				this.categoryList = res.data.data.map(item => {
+					return {
+						value: item.id,
+						label: item.name
+					}
 				})
-				if (id === 0) {
-					this.leaveOne = list
-				} else {
-					this.leaveTwo = list
-				}
 			}).catch((err) => {
 
 			});
 		},
 		handleSure () {
-			if (this.row.productSn) {
+			if (this.row.id) {
 				let select = {
-					value: this.row.productSn,
-					label: this.row.productName
+					value: this.row.id,
+					label: this.row.name
 				}
 				this.modal1 = false;
 				this.$emit('on-change', select)
 			} else {
-				this.$Message.error('请选择商品')
+				this.$Message.error('请选择优惠券')
 			}
 
 		}
 	},
 	watch: {
 		value (newval) {
-			
 			this.modal1 = newval
 		},
 		modal1 (newval) {
@@ -229,18 +219,17 @@ export default {
 		},
 		productSn (newVal) {
 			if (newVal) {
-				productItem(newVal).then((res) => {
-					console.log('res+',res)
-					this.row = res.data.data || {}
-				}).catch((err) => {
+				// productItem(newVal).then((res) => {
+				// 	this.row = res.data.data
+				// }).catch((err) => {
 
-				});
+				// });
 			}
 
 		}
 	},
 	created () {
-		this.getList(0)
+		this.getList()
 		this.handleSearch()
 	}
 }

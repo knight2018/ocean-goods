@@ -3,12 +3,12 @@
 		<Search :handleSearch="handleSearch" :handleClear="handleClear" :loading="loading">
 			<div class="flex">
 				<div>
-					<span>品类名称名称：</span>
+					<span>用户姓名：</span>
 					<Input
 						style="width:200px;"
-						v-model="search.couponName"
+						v-model="search.name"
 						@on-enter="handleSearch"
-						placeholder="请输入品类名称名称"
+						placeholder="请输入用户姓名："
 					/>
 				</div>
 			</div>
@@ -16,52 +16,55 @@
 	</div>
 </template>
 <script>
+import { a } from '../../../api/data'
 export default {
-    props: {
+	props: {
 		loading: {
 			type: Boolean,
 			default: false
 		},
 		handleSearch: {
 
-		}
+		},
 	},
 	data () {
 		return {
-          search: {
+			search: {
 				name: ''
 			},
+			add: true,
 			columns: [
 				{
-					title: '编号',
+					title: '用户ID',
 					key: 'id',
 					align: 'center'
 				},
 				{
-					title: '名称',
-					key: 'name',
+					title: '用户微信',
+					key: 'nickName',
 					align: 'center'
 				},
 				{
-					title: '品类范围',
-					key: 'productCategoryNames',
-					align: 'center',
-                    
+					title: '用户手机',
+					key: 'mobile',
+					align: 'center'
 				},
 				{
-					title: '创建时间',
-					key: 'createTime',
+					title: '上次消费时间',
+					key: 'latestConsumeTime',
+					align: 'center',
+					render: (h, params) => {
+						return h('div', {}, params.row.latestConsumeTime?a(new Date(params.row.latestConsumeTime),true):'尚未消费')
+					}
+				},
+				{
+					title: '历史订单数量',
+					key: 'historyOrderNum',
 					align: 'center',
 
 				},
 				{
-					title: '创建人',
-					key: 'creatorName',
-					align: 'center',
-
-				},
-				{
-					title: '操作',
+					title: '详情',
 					key: 'packName',
 					align: 'center',
 					render: (h, params) => {
@@ -77,33 +80,29 @@ export default {
 								},
 								on: {
 									click: () => {
-										let newObj = JSON.parse(JSON.stringify(params.row))
 										this.$router.push({
-											name: 'couponCategoryAdd',
+											name: 'userInfo',
 											query: {
-												obj: JSON.stringify(newObj)
+												id: params.row.id
 											}
 										})
 									}
 								}
-							}, '编辑')
+							}, '详情')
 						])
 					}
 				}
-			]
-
+			],
 		}
 	},
 	methods: {
 		handleClear () {
 			this.search = {
-				name: ''
+				name: '',
+
 			}
 			this.handleSearch()
-        },
-        handleAdd (){
-            this.$router.push('/couponCategoryAdd')
-        }
+		},
 	}
 }
 </script>

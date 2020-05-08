@@ -118,7 +118,8 @@ export default {
 			this.$refs[name].validate((valid) => {
 				if (valid) {
 					let obj = QueryArray(this.value.productCategoryId[1], this.shopList)
-					let classify = obj.child.classify //1实体 2虚拟
+					let classify = obj.child.classify //0实体 1虚拟
+					console.log(classify,'???')
 					this.$emit('nextStep', classify)
 				} else {
 

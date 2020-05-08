@@ -42,7 +42,7 @@ export default {
 					},
 					{
 						title: '商品数量',
-						key: 'productCount',
+						key: 'productQuantity',
 						align: 'center'
 					},
 					{
@@ -194,9 +194,13 @@ export default {
 		},
 		async productCategory (categoryId, data, off) {
 			if (off) {
-				productCategoryDelete(categoryId,data).then((res) => {
+				productCategoryDelete(categoryId, data).then((res) => {
 					this.callback()
-					this.handleSearch()
+					if (this.tableList.data1.length !== 1) {
+						this.handleSearch('page')
+					} else {
+						this.handleSearch()
+					}
 					this.$Message.warning('删除成功')
 				}).catch((err) => {
 
@@ -247,7 +251,7 @@ export default {
 		} else {
 			this.parentId = 0
 		}
-		
+
 		this.handleSearch()
 	}
 }

@@ -8,7 +8,7 @@ import searchListHOC from '../components/hoc/searchListHOC'
 import MoneySearch from './wrapped/moneySearch'
 import { amountSetting } from '../../api/coupon'
 let promiseFn = (data) => {
-	return new Promise((reslove,reject) => {
+	return new Promise((resolve,reject) => {
 		amountSetting(data).then((res) => {
             res.data.data.forEach(item => {
                 if(item.type === 1){
@@ -23,7 +23,7 @@ let promiseFn = (data) => {
                 data: res.data.data,
                 total: res.data.total
             }
-            reslove(params)
+            resolve(params)
 		}).catch((err) => {
             reject(err)
 		});

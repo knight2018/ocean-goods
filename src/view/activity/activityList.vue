@@ -5,11 +5,11 @@
 </template>
 <script>
 import searchListHOC from '../components/hoc/searchListHOC'
-import CategorySearch from './wrapped/categorySearch'
-import { categorySetting } from '../../api/coupon'
+import ActivitySearch from './wrapped/activitySearch'
+import { activityList } from '../../api/activity'
 let promiseFn = (data) => {
 	return new Promise((resolve,reject) => {
-		categorySetting(data).then((res) => {
+		activityList(data).then((res) => {
 			let params = {
                 data: res.data.data,
                 total: res.data.total
@@ -20,8 +20,8 @@ let promiseFn = (data) => {
 		});
 	})
 }
-let Hoc = searchListHOC(CategorySearch, promiseFn)
-export default {
+let Hoc = searchListHOC(ActivitySearch, promiseFn)
+export default {    
 	components: { Hoc },
 	data () {
 		return {

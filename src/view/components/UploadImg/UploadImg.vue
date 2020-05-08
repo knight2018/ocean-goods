@@ -268,25 +268,9 @@ export default {
 			}
 
 		},
-		// off (newVal) {
-		// 	console.log(newVal);
-		// 	if (newVal === 1 || newVal === 2) {
-		// 		if (newVal === 2) {
-		// 			console.log(this.addList);
-		// 			this.addList.forEach(item => {
-		// 				this.delete(item);
-		// 			});
-		// 		} else {
-		// 			this.delList.forEach(item => {
-		// 				this.delete(item);
-		// 			});
-		// 		}
-		// 		this.delList = [];
-		// 		this.addList = [];
-		// 		console.log(this.addList);
-		// 		this.$emit("on-change", 0);
-		// 	}
-		// },
+		off(val){
+			console.log('你特么什么时候改变了',val)
+		},
 		uploadList (newVal) {
 			console.log(newVal)
 			let list = []
@@ -298,6 +282,7 @@ export default {
 	},
 	beforeDestroy () {
 		console.log(this.off)
+		//优化建议用promise在beforeRouterLeave里面监听是否删除成功，不成功就继续
 		if (this.off === 1 || this.off === 2) {
 			if (this.off === 2) {
 				console.log(this.addList);
@@ -312,7 +297,7 @@ export default {
 			this.delList = [];
 			this.addList = [];
 
-			this.$emit("on-change", 0);
+			// this.$emit("on-change", 0);
 		}
 	},
 	mounted () {

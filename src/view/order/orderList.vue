@@ -59,7 +59,7 @@
 	</div>
 </template>
 <script>
-import { orderList, orderDelete } from '../../api/order'
+import { orderList, orderDelete, orderDelivery } from '../../api/order'
 export default {
 	data () {
 		return {
@@ -175,7 +175,12 @@ export default {
 									},
 									on: {
 										click: () => {
+											orderDelivery(params.row.id).then((res) => {
+												this.$Message.success('发货成功')
+												this.handleSearch('page');
+											}).catch((err) => {
 
+											});
 										}
 									}
 								}, '订单发货'),
@@ -186,6 +191,7 @@ export default {
 									},
 									on: {
 										click: () => {
+
 										}
 									}
 								}, '订单追踪'),
@@ -270,9 +276,6 @@ export default {
 					str = '未支付'
 					break;
 				case 1:
-					str = '支付宝'
-					break;
-				case 2:
 					str = '微信'
 					break;
 				default:
@@ -294,12 +297,15 @@ export default {
 					str = '已发货'
 					break;
 				case 3:
-					str = '已完成'
+					str = '待评价'
 					break;
 				case 4:
-					str = '已关闭'
+					str = '已评价'
 					break;
 				case 5:
+					str = '已取消'
+					break;
+				case 6:
 					str = '无效订单'
 					break;
 				default:

@@ -10,7 +10,7 @@
 					@on-change="handleChange"
 					style="width:220px"
 					clearable
-					placeholder="请选择优惠券类型（默认全部）"
+					placeholder="请选择优惠券类型"
 				>
 					<Option v-for="item in typeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
 				</Select>
@@ -60,11 +60,21 @@
 	</div>
 </template>
 <script>
-import { amountSettingAdd } from '../../../api/coupon'
+import { amountSettingAdd, amountSettingUpdate } from '../../../api/coupon'
 import { setObj } from '@/libs/tools'
+const validateAge = (rule, value, callback) => {
+	let reg = /^((?!0+$)[0-9]{1,7})$/;
+	console.log(reg.test(value))
+	if (!reg.test(value)) {
+		callback(new Error('我就静静看着你作死'));
+	} else {
+		callback();
+	}
+}
 export default {
 	data () {
 		return {
+			off: false,
 			formmoney: {
 				id: null,
 				name: '',
@@ -84,11 +94,17 @@ export default {
 					{
 						required: true, type: 'number', message: '请输入优惠金额', trigger: 'blur,change'
 					},
+					{
+						validator: validateAge, trigger: 'blur'
+					}
 				],
 				minPoint: [
 					{
 						required: true, type: 'number', message: '请输入满减金额', trigger: 'blur,change'
 					},
+					{
+						validator: validateAge, trigger: 'blur'
+					}
 				],
 			},
 			typeList: [
@@ -109,6 +125,7 @@ export default {
 	},
 	methods: {
 		handleChange (value) {
+
 			this.formmoney.amount = 0;
 			this.formmoney.minPoint = 0;
 			this.formmoney.discount = 0;
@@ -116,9 +133,14 @@ export default {
 		handleSubmit (name) {
 			this.$refs[name].validate((valid) => {
 				if (valid) {
+					if (this.formmoney.type === 2) {
+						if (this.formmoney.minPoint < this.formmoney.amount || this.formmoney.minPoint === this.formmoney.amount) {
+							this.$Message.error('你可别秀了，公司都快被你秀破产了')
+							return
+						}
+					}
 					if (this.formmoney.id) {
 						amountSettingUpdate(this.formmoney.id, this.formmoney).then((res) => {
-							this.off = 1
 							this.$Message.success('修改成功')
 							this.$router.replace('/moneyList')
 						}).catch((err) => {
@@ -126,7 +148,6 @@ export default {
 						});
 					} else {
 						amountSettingAdd(this.formmoney).then((res) => {
-							this.off = 1
 							this.$Message.success('添加成功')
 							this.$router.replace('/moneyList')
 						}).catch((err) => {
@@ -139,11 +160,12 @@ export default {
 			})
 		},
 	},
-	mounted () {
-			let query = this.$route.query
+	created () {
+		let query = this.$route.query
 		if (query.obj) {
 			let obj = JSON.parse(query.obj)
 			this.formmoney = setObj(obj, this.formmoney)
+
 		}
 	}
 }

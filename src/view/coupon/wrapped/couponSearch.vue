@@ -34,23 +34,28 @@
 	</div>
 </template>
 <script>
+import { categorySetting, couponDel } from '../../../api/coupon'
 export default {
-    name: 'CouponSearch',
-    props:{
-        loading:{
-            type: Boolean,
-            default: false
-        },
-        handleSearch:{
+	name: 'CouponSearch',
+	props: {
+		loading: {
+			type: Boolean,
+			default: false
+		},
+		handleSearch: {
 
-        }
-    },
+		},
+		dataLength: {
+			type: Number,
+			default:0
+		}
+	},
 	data () {
 		return {
 			search: {
 				couponName: '',
-				type: 0,
-				category: 0
+				type: null,
+				category: null
 			},
 			typeList: [
 				{
@@ -66,19 +71,139 @@ export default {
 					label: '折扣'
 				},
 			],
-			categoryList: []
+			categoryList: [],
+			columns: [
+				{
+					title: '编号',
+					key: 'id',
+					align: 'center'
+				},
+				{
+					title: '优惠券名称',
+					key: 'name',
+					align: 'center'
+				},
+				{
+					title: '金额设置',
+					key: 'amountSettingName',
+					align: 'center'
+				},
+				{
+					title: '品类设置',
+					key: 'categorySettingName',
+					align: 'center'
+				},
+				{
+					title: '有效期',
+					key: 'days',
+					tooltip: true,
+					align: 'center',
+					render: (h, params) => {
+						return h('span', {
+
+							//  props:{
+							// 	 content: params.row.timeType ===1?`${params.row.startTime}-${params.row.endTime}`:params.row.days
+							//  }
+						}, params.row.timeType === 1 ? `${params.row.startTime}-${params.row.endTime}` : params.row.days)
+					}
+				},
+				{
+					title: '创建时间',
+					key: 'createTime',
+					tooltip: true,
+					align: 'center'
+				},
+				{
+					title: '创建人',
+					key: 'creatorName',
+					align: 'center'
+				},
+				{
+					title: '操作',
+					key: 'packName',
+					align: 'center',
+					render: (h, params) => {
+						return h('div', {
+							style: {
+								display: 'flex',
+								justifyContent: 'center'
+							}
+						}, [
+							h('i-button', {
+								style: {
+									marginLeft: '15px'
+								},
+								on: {
+									click: () => {
+										let newObj = JSON.parse(JSON.stringify(params.row))
+										this.$router.push({
+											name: 'couponAdd',
+											query: {
+												obj: JSON.stringify(newObj)
+											}
+										})
+									}
+								}
+							}, '编辑'),
+							h('i-button', {
+								style: {
+									marginLeft: '15px'
+								},
+								props: {
+									type: "error"
+								},
+								on: {
+									click: () => {
+										couponDel(params.row.id).then((res) => {
+											this.$Message.success('删除成功')
+											if (this.dataLength !== 1) {
+												this.handleSearch('page')
+											} else {
+												this.handleSearch()
+											}
+										}).catch((err) => {
+
+										});
+									}
+								}
+							}, '删除')
+						])
+					}
+				}
+			]
 		}
-    },
-    methods:{
-        handleClear(){
-            this.search = {
-                couponName: '',
-				type: 0,
-				category: 0
-            }
-            this.handleSearch()
-        }
-    }
+	},
+	methods: {
+		handleClear () {
+			this.search = {
+				couponName: '',
+				type: null,
+				category: null
+			}
+			this.handleSearch()
+		},
+		handleAdd () {
+			this.$router.push('/couponAdd')
+		}
+	},
+	mounted () {
+		let params = {
+			name: '',
+			pageNum: 1,
+			pageSize: 1000
+		}
+		categorySetting(params).then((res) => {
+			console.log(res)
+			this.categoryList = res.data.data.map(item => {
+				return {
+					value: item.id,
+					label: item.name
+				}
+			})
+		}).catch((err) => {
+
+		});
+	}
 }
 </script>
 

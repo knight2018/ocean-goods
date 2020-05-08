@@ -206,9 +206,9 @@ export default {
 									},
 									on: {
 										click: () => {
+											
 											let newObj = JSON.parse(JSON.stringify(params.row))
 											let obj = QueryArray(newObj.productCategoryId, this.attrList)
-											console.log(obj)
 											newObj.productCategoryId = [this.attrList[obj.parentIndex].value, newObj.productCategoryId + '']
 											this.$router.push({
 												name: '/shopAdd',
@@ -294,7 +294,7 @@ export default {
 			let productIds = id;
 			PublishStatus({ productIds, publishStatus }).then((res) => {
 				this.$Message.success('修改成功')
-				this.handleSearch()
+				this.handleSearch('page')
 			}).catch((err) => {
 
 			});
@@ -303,12 +303,18 @@ export default {
 		handleDel (id) {
 			DeleteStatus(id).then((res) => {
 				this.$Message.success('删除成功')
-				this.handleSearch()
+				if(this.tableList.data1.length!==1){
+					this.handleSearch('page')
+				}else{
+					this.handleSearch()
+				}
+				
 			}).catch((err) => {
 
 			});
 		},
 		handleSearch (off) {
+			console.log(off,'你过来啊')
 			this.loading = true;
 			if (off !== 'page') {
 				this.search.page = 1

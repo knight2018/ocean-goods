@@ -87,3 +87,13 @@ export const getOrder = (id) => {
         method: 'get',
     })
 }
+
+//发货
+export const orderDelivery = (id) => {
+    let params = {}
+    return axios.request({
+        url: `/order/update/delivery/${id}`,
+        params,
+        method: 'post',
+    })
+}

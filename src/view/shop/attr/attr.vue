@@ -80,16 +80,16 @@ export default {
 										marginLeft: '15px'
 									},
 									props: {
-										
+
 									},
 									on: {
 										click: () => {
 											this.$router.push({
 												name: '/attribute',
 												query: {
-                                       id: params.row.attributeCategoryId,
-                                       name: params.row.attributeCategoryName,
-                                       type: 0
+													id: params.row.attributeCategoryId,
+													name: params.row.attributeCategoryName,
+													type: 0
 												}
 											})
 										}
@@ -100,16 +100,16 @@ export default {
 										marginLeft: '15px'
 									},
 									props: {
-									
+
 									},
 									on: {
 										click: () => {
 											this.$router.push({
 												name: '/attribute',
 												query: {
-                                       id: params.row.attributeCategoryId,
-                                       name: params.row.attributeCategoryName,
-                                       type: 1
+													id: params.row.attributeCategoryId,
+													name: params.row.attributeCategoryName,
+													type: 1
 												}
 											})
 										}
@@ -196,8 +196,12 @@ export default {
 			}
 			productAttributeUpdate(this.id, data).then((res) => {
 				this.$Message.warning('刪除成功')
-            this.modalOff = false;
-             this.handleSearch()
+				this.modalOff = false;
+				if (this.tableList.data1.length !== 1) {
+					this.handleSearch('page')
+				} else {
+					this.handleSearch()
+				}
 			}).catch((err) => {
 				this.modalOff = false;
 			});
@@ -208,15 +212,15 @@ export default {
 					if (this.update) {
 						productAttributeUpdate(this.id, this.formAttr).then((res) => {
 							this.addOff = false
-                     this.$Message.success('修改成功')
-                     this.handleSearch()
+							this.$Message.success('修改成功')
+							this.handleSearch('page')
 						}).catch((err) => {
 							this.addOff = false
 						});
 					} else {
 						productAttributeAdd(this.formAttr).then((res) => {
-                     this.addOff = false
-                     this.handleSearch()
+							this.addOff = false
+							this.handleSearch()
 							this.$Message.success('添加成功')
 						}).catch((err) => {
 							this.addOff = false
@@ -234,7 +238,7 @@ export default {
 			this.formAttr.attributeCategoryName = ''
 		}
 	},
-	created (){
+	created () {
 		this.handleSearch();
 	}
 }

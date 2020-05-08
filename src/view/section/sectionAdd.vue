@@ -28,7 +28,7 @@
 	</div>
 </template>
 <script>
-const validateTest = (rule, value, callback)=>{
+const validateTest = (rule, value, callback) => {
 	if (!value) {
 		callback(new Error('商品不允许为空'));
 		return
@@ -37,7 +37,7 @@ const validateTest = (rule, value, callback)=>{
 }
 import { setObj } from '../../libs/tools'
 import { productAdd, productUpdate } from '../../api/section'
-import { productItem } from '../../api/shop'
+import { productDetial, productItem } from '../../api/shop'
 export default {
 	data () {
 		return {

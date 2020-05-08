@@ -76,7 +76,7 @@ export default {
 					},
 					{
 						title: '展示商品',
-						key: 'productSn',
+						key: 'contentId',
 						align: 'center'
 					},
 					{
@@ -161,7 +161,11 @@ export default {
 											}
 											ElasticLayerUpdate(params.row.id, data).then((res) => {
 												this.$Message.success('删除成功')
-												this.handleSearch()
+												if (this.tableList.data1.length !== 1) {
+													this.handleSearch('page')
+												} else {
+													this.handleSearch()
+												}
 											}).catch((err) => {
 
 											});

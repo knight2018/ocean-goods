@@ -38,13 +38,44 @@ export const ReturnReasonUpdate = (id, data) => {
 
 //批量删除
 export const returnReasonDelete = (ids) => {
-    let data = { ids }
+    let params = { ids }
     return axios.request({
         url: `/returnReason/delete`,
-        data,
+        params,
         method: 'post',
-        headers: {
-            'content-type': 'application/json'
-        }
+    })
+}
+
+//POST 确认退款
+export const returnApplyRefund = (id) => {
+    return axios.request({
+        url: `/returnApply/refund/${id}`,
+        data: {},
+        method: 'post',
+    })
+}
+
+//POST 拒绝退款
+export const returnApplyRefuse = (id, note) => {
+    return axios.request({
+        url: `/returnApply/refuse/${id}`,
+        params: { note },
+        method: 'post',
+    })
+}
+
+//POST 确认退货
+export const returnApplyConfirm = (id) => {
+    return axios.request({
+        url: `/returnApply/confirm/${id}`,
+        data: {},
+        method: 'post',
+    })
+}
+export const ReturnReasonItem = (id) => {
+    return axios.request({
+        url: `/returnApply/item/${id}`,
+        params:{},
+        method: 'get',
     })
 }

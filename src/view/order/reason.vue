@@ -129,9 +129,13 @@ export default {
 									},
 									on: {
 										click: () => {
-
 											returnReasonDelete(params.row.id).then((res) => {
 												this.$Message.success('删除成功')
+												if(this.tableList.data1.length !==1){
+													this.handleSearch('page')
+												}else{
+													this.handleSearch()
+												}
 												this.handleSearch()
 											}).catch((err) => {
 
@@ -195,7 +199,7 @@ export default {
 						ReturnReasonUpdate(this.formReason.id, this.formReason).then((res) => {
 							this.$Message.success('修改成功')
 							this.modal1 = false;
-							this.handleSearch()
+							this.handleSearch('page')
 						}).catch((err) => {
 							this.loading = false
 							this.$nextTick(() => {

@@ -3,7 +3,7 @@
 		<Card style="width: 80%">
 			<div class="title">
 				<span>退货商品</span>
-				<span class="mg-lf-30">订单状态：你猜</span>
+				<span class="mg-lf-30">订单状态：{{orderStatus}}</span>
 			</div>
 			<Table border class="mg-tp" :columns="columns" :data="[message]"></Table>
 		</Card>
@@ -100,7 +100,7 @@
 						<p class="padding">{{message.productRealPrice}}</p>
 					</div>
 				</li>
-				<li class="li-box">
+				<!-- <li class="li-box">
 					<div class="li-left li-box">
 						<p class="padding">确认退款金额</p>
 					</div>
@@ -110,7 +110,7 @@
 							<InputNumber :disabled="message.status!==0" :min="0" v-model="price" style="width: 200px" />
 						</p>
 					</div>
-				</li>
+				</li>-->
 				<li class="li-box" v-if="message.status===1 && message.status===0">
 					<div class="li-left li-box">
 						<p class="padding">收货人姓名</p>
@@ -186,8 +186,8 @@
 				<Button type="primary" @click="handleMoadl('sure')">确认退货</Button>
 				<Button type="error" class="mg-lf" @click="handleMoadl('none')">拒绝退货</Button>
 			</div>
-            <div class="mg-tp flex" v-if="message.status===1">
-				<Button type="primary" @click="handleMoadl('sure')">确认收货</Button>
+			<div class="mg-tp flex" v-if="message.status===1">
+				<Button type="primary" @click="handleRefund">确认收货</Button>
 			</div>
 		</Card>
 		<Modal v-model="modal1" title="退款处理" @on-ok="ok" @on-cancel="cancel">
@@ -197,28 +197,37 @@
 			<div class="mg-tp">
 				<span>处理结果：</span>
 				<RadioGroup v-model="off">
-					<Radio :label="1">同意退款</Radio>
-					<Radio :label="0">拒绝退款</Radio>
+					<Radio :label="1">同意退货</Radio>
+					<Radio :label="0">拒绝退货</Radio>
 				</RadioGroup>
 			</div>
 			<div class="mg-tp" v-if="off">微信支付方式：会返回到相应的支付渠道（如零钱或银行卡）如果积分或优惠券抵扣：申请维权的订单抵扣积分不会退还</div>
 			<div class="mg-tp" v-show="!off">
 				<span>驳回理由：</span>
-				<Input type="textarea" style="width: 400px" :show-word-limit="true" :maxlength="100" />
+				<Input
+					type="textarea"
+					v-model="note"
+					style="width: 400px"
+					:show-word-limit="true"
+					:maxlength="100"
+				/>
 			</div>
 		</Modal>
 	</div>
 </template>
 <script>
-import { commodityInformation } from '../orderDetalis/columns'
+import { ReturnReasonList, returnApplyRefund, returnApplyRefuse, returnApplyConfirm, ReturnReasonItem } from '../../../api/reason'
+import { commodityInformation, getStatus } from '../orderDetalis/columns'
 export default {
 	data () {
 		return {
 			columns: commodityInformation,
 			price: 0,
-            remark: '',
-            off: 1,
+			remark: '',
+			off: 1,
 			modal1: false,
+			orderStatus: '',
+			note: '',//驳回理由
 			message: {
 
 			}
@@ -247,28 +256,83 @@ export default {
 			return str
 		},
 		ok () {
+			if (this.off) {
+				returnApplyConfirm(this.message.id).then(res => {
+					this.$Message.success('已确定退货')
+					ReturnReasonItem(this.message.id).then((res) => {
+						res.data.data.productAttr = res.data.data.productAttr.split(',')
+						this.message = res.data.data
+						this.orderStatus = getStatus(res.data.data.orderStatus)
+						// this.getList();
+					}).catch((err) => {
 
+					});
+				})
+			} else {
+				returnApplyRefuse(this.message.id, this.note).then((res) => {
+					this.$Message.success('已拒绝退货')
+					ReturnReasonItem(this.message.id).then((res) => {
+						res.data.data.productAttr = res.data.data.productAttr.split(',')
+						this.message = res.data.data
+						this.orderStatus = getStatus(res.data.data.orderStatus)
+						// this.getList();
+					}).catch((err) => {
+
+					});
+				}).catch((err) => {
+
+				});
+			}
 		},
 		cancel () {
-
+			this.note = ''
 		},
 		handleMoadl (off) {
 			if (off === 'sure') {
-                this.off = 1
+				this.off = 1
 			} else {
-                this.off = 0
+				this.off = 0
 			}
 			this.modal1 = true
-		}
+		},
+		handleRefund () {
+			returnApplyRefund(this.message.id).then((res) => {
+				this.$Message.success('退款成功')
+				ReturnReasonItem(this.message.id).then((res) => {
+					res.data.data.productAttr = res.data.data.productAttr.split(',')
+					this.message = res.data.data
+					this.orderStatus = getStatus(res.data.data.orderStatus)
+					// this.getList();
+				}).catch((err) => {
+
+				});
+			}).catch((err) => {
+
+			});
+		},
+		// getList () {
+		// 	ReturnReasonList({ pageNum: 1, pageSize: 100 }).then((res) => {
+		// 		res.data.data.some(item => {
+		// 			if (item.id == this.message.reason) {
+		// 				this.$set(this.message, 'resonTxt', item.name)
+		// 			}
+		// 			return true
+		// 		})
+		// 	}).catch((err) => {
+		// 	});
+		// }
 	},
 	mounted () {
 		if (this.$route.query.obj) {
 			let obj = JSON.parse(this.$route.query.obj)
-			obj.proofPics = obj.proofPics.split(',')
+			obj.productAttr = obj.productAttr.split(',')
 			this.message = obj
+			console.log(obj)
+			this.orderStatus = getStatus(obj.orderStatus)
 		} else {
 			this.$router.back()
 		}
+	// this.getList();
 	}
 }
 </script>

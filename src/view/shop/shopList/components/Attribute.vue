@@ -108,18 +108,19 @@ export default {
 					title: '销售价格',
 					key: 'price',
 					align: 'center',
-					width: 80,
+					width: 100,
 					render: (h, params) => {
-						return h('Input', {
+						return h('InputNumber', {
 							style: {
-
+								width: '90%'
 							},
 							props: {
 								value: params.row.price
 							},
 							on: {
 								'on-change': (event) => {
-									this.tableList.data1[params.index].price = event.target.value
+									console.log(event)
+									this.tableList.data1[params.index].price = typeof event === 'object' ? event.target.value : event
 								}
 							}
 						})
@@ -129,9 +130,9 @@ export default {
 					title: '商品库存',
 					key: 'stock',
 					align: 'center',
-					width: 80,
+					width: 100,
 					render: (h, params) => {
-						return h('Input', {
+						return h('InputNumber', {
 							style: {
 								width: '90%'
 							},
@@ -140,7 +141,7 @@ export default {
 							},
 							on: {
 								'on-change': (event) => {
-									this.tableList.data1[params.index].stock = event.target.value
+									this.tableList.data1[params.index].stock =  typeof event === 'object' ? event.target.value : event
 								}
 							}
 						})
@@ -150,9 +151,9 @@ export default {
 					title: '库存预警值',
 					key: 'lowStock',
 					align: 'center',
-					width: 80,
+					width: 100,
 					render: (h, params) => {
-						return h('Input', {
+						return h('InputNumber', {
 							style: {
 								width: '90%'
 							},
@@ -161,7 +162,7 @@ export default {
 							},
 							on: {
 								'on-change': (event) => {
-									this.tableList.data1[params.index].lowStock = event.target.value
+									this.tableList.data1[params.index].lowStock =  typeof event === 'object' ? event.target.value : event
 								}
 							}
 						})
@@ -485,7 +486,7 @@ export default {
 		this.editor.customConfig.uploadImgHeaders = {
 			'Authorization': getToken()
 		};
-		this.editor.customConfig.showLinkImg  = false
+		this.editor.customConfig.showLinkImg = false
 		this.editor.customConfig.uploadImgHooks = {
 			before: function (xhr, editor, files) {
 

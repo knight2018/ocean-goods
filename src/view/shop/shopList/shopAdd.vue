@@ -81,7 +81,12 @@ export default {
 		handleAdd () {
 			let shopAdd = JSON.parse(JSON.stringify(this.shopAdd))
 			shopAdd.productCategoryId = shopAdd.productCategoryId[1] //shopAdd.productCategoryId.length===2?shopAdd.productCategoryId[1]:shopAdd.productCategoryId[0]
-			shopAdd.serviceIds = shopAdd.serviceIds.join(',')
+			if(shopAdd.serviceIds.length){
+				shopAdd.serviceIds = shopAdd.serviceIds.join(',')
+			}else{
+				shopAdd.serviceIds = null
+			}
+			
 			if (this.update) {
 				productUpdate(this.id, shopAdd).then((res) => {
 					this.$Message.success('修改商品成功')
